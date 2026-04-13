@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chatbot</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="chat-container">
+
+    <div class="chat-header">
+        Flask Chatbot 🤖
+        <a href="/logout" class="logout">Logout</a>
+    </div>
+
+    <div id="chatbox" class="chatbox">
+
+        {% for chat in chats %}
+            <div class="user-msg">{{ chat[0] }}</div>
+            <div class="bot-msg">{{ chat[1] }}</div>
+        {% endfor %}
+
+    </div>
+
+    <div class="chat-input">
+        <input type="text" id="msg" placeholder="Type message...">
+        <button onclick="send()">Send</button>
+    </div>
+
+</div>
+<input type="file" id="fileInput">
+<button onclick="uploadFile()">📁 Upload</button>
+<script>
+
+function send(){
+
+    var msg = document.getElementById("msg").value
+    if(msg.trim() === "") return
+
+    var chatbox = document.getElementById("chatbox")
+
+    chatbox.innerHTML += `<div class="user-msg">${msg}</div>`
+
+    fetch("/get",{
+        method:"POST",
+        headers:{
+            "Content-Type":"application/x-www-form-urlencoded"
+        },
+        body:"msg="+msg
+    })
+    .then(response => response.text())
+    .then(data => {
+
+        chatbox.innerHTML += `<div class="bot-msg">${data}</div>`
+
+        chatbox.scrollTop = chatbox.scrollHeight
+        document.getElementById("msg").value = ""
+    })
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,7 @@
+<h2>Your Chat History 📜</h2>
+
+{% for chat in chats %}
+<p><b>You:</b> {{ chat.message }}</p>
+<p><b>Bot:</b> {{ chat.response }}</p>
+<hr>
+{% endfor %}
